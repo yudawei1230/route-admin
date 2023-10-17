@@ -4,7 +4,7 @@
 			<div class="logo">
 				<img src="/logo.png" alt="Logo" />
 				<div class="name">
-					<span v-for="text in app.info.name" :key="text">{{ text }}</span>
+					<span v-for="text in 'Ann-admin'" :key="text">{{ text }}</span>
 				</div>
 			</div>
 

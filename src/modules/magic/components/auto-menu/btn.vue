@@ -1,9 +1,10 @@
 <template>
-	<el-badge is-dot v-if="!browser.isMini">
-		<!-- <div class="btn" @click="toCode">
+	<!-- <el-badge is-dot v-if="!browser.isMini">
+		<div class="btn" @click="toCode">
 			<span>AI 极速编码</span>
-		</div> -->
-	</el-badge>
+		</div>
+	</el-badge> -->
+	<span></span>
 </template>
 
 <script lang="ts" name="auto-menu" setup>

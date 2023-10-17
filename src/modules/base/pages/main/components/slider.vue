@@ -34,8 +34,8 @@ const { app } = useBase();
 		cursor: pointer;
 
 		img {
-			height: 30px;
-			width: 30px;
+			height: 80px;
+			width: 80px;
 		}
 
 		span {

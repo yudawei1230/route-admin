@@ -77,7 +77,7 @@ async function formatCode() {
 function init() {
 	const options = merge(
 		{
-			theme: "default",
+			theme: "dark",
 			language: props.language,
 			minimap: {
 				enabled: true

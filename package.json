@@ -50,6 +50,7 @@
 		"@vitejs/plugin-vue": "^4.3.3",
 		"@vitejs/plugin-vue-jsx": "^3.0.2",
 		"@vue/compiler-sfc": "^3.3.4",
+		"copy-to-clipboard": "^3.3.3",
 		"eslint": "^8.48.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-prettier": "^5.0.0",

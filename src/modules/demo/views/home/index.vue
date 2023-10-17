@@ -60,6 +60,8 @@ import CountEffect from "./components/count-effect.vue";
 import TabChart from "./components/tab-chart.vue";
 import SalesRank from "./components/sales-rank.vue";
 import HotSearch from "./components/hot-search.vue";
+
+location.hash = '/crud/manage'
 </script>
 
 <style lang="scss">
