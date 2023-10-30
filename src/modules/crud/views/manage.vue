@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" name="crud-manage" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { cloneDeep } from "lodash-es";
 import { useCrud, useTable, useUpsert } from "@cool-vue/crud";
 import { useCool } from "/@/cool";
@@ -44,23 +44,7 @@ const { service } = useCool();
 // 字典
 const { dict } = useDict();
 
-const defaultCode = `
-function handler(data) {
-	// 关键词
-  const keyword = "keywords=" + encodeURIComponent(data.keyword);
-	// 关键词前缀
-  const sprefix = "sprefix=" + encodeURIComponent(data.keyword + ',aps,366');
-	// 排名
-  const rank = "sr=" + data.rank;
-	// 时间戳
-	const timestamp = "qid=" + (Date.now() / 1000).toFixed(0)
-
-	// 跳转链接
-  const path = [data.redirectUrl, keyword, timestamp, sprefix, rank].join('&') + 'th=1'
-
-  return path;
-}
-`
+const defaultCode = undefined
 
 
 // cl-upsert
@@ -73,7 +57,14 @@ const UpsertCodeItems = [
 
 	}
 ]
-
+const keyword = computed(() => {
+	const list = dict.get("keyword").value
+	if(!Array.isArray(list) || !list.length) return []
+	return list.map(v => {
+		v.value = String(v.id)
+		return v
+	})
+})
 // cl-upsert
 const Upsert = useUpsert({
 	items: [
@@ -95,10 +86,9 @@ const Upsert = useUpsert({
 			},
 			component: {
 				name: "el-select",
-				options: dict.get("keyword"),
+				options: keyword,
 				props: { filterable: true }
-			}},
-		{ prop: "rank", label: "排名", required: true, component: { name: "el-input" } },
+			}}
 	]
 });
 
@@ -114,7 +104,7 @@ const Table = useTable({
 		{ 
 			prop: "keyword",
 			label: "关键词",
-			dict: dict.get("keyword"),
+			dict: keyword,
 			dictColor: false
 		},
 		{ prop: "rank", label: "排名" },
@@ -128,7 +118,7 @@ const Table = useTable({
 				label: "复制短链",
 				type: "success",
 				onClick({ scope }) {
-					copy(`http://8.218.88.234:8001/${scope.row.shortLinkId}`);
+					copy(`${location.origin.replace(/\:\d+/, '')}/${scope.row.shortLinkId}`);
 					ElMessage.success("短链复制成功");
 				}
 			},
@@ -174,6 +164,7 @@ const Crud = useCrud(
 
 const onSubmit = async (data, { next, close }) => {
 	if(!data.routeCode) data.routeCode = defaultCode
+	if(!data.rank) data.rank = ''
 	const res = await service.crud.manage.page()
 	
 	if(!data.id) {

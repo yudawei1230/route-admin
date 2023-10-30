@@ -1,16 +1,18 @@
-FROM node:lts-alpine
-WORKDIR /build
-# 设置Node-Sass的镜像地址
-RUN npm config set sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
-# 设置npm镜像
-RUN npm config set registry https://registry.npm.taobao.org
-COPY package.json /build/package.json
-RUN yarn
-COPY ./ /build
-RUN npm run build
+
 
 FROM nginx
 RUN mkdir /app
-COPY --from=0 /build/dist /app
-COPY --from=0 /build/nginx.conf /etc/nginx/nginx.conf
+COPY ./dist /app
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+
+# 如果端口更换，这边可以更新一下
 EXPOSE 80
+EXPOSE 6868
+
+# 定义容器启动时执行的命令
+CMD ["nginx", "-g", "daemon off;"]
+#docker stop ec-admin && docker rm -v ec-admin && docker rmi ec-admin
+#docker build -t ec-admin .
+#docker save -o ec-admin.tar ec-admin
+#docker load -i ec-admin.tar
+#docker run -d --name ec-admin --network host ec-admin

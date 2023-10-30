@@ -1,6 +1,6 @@
 <template>
 	<div class="view-home">
-		<el-row :gutter="15">
+		<!-- <el-row :gutter="15">
 			<el-col :lg="6" :md="12" :xs="24">
 				<div class="card">
 					<count-user />
@@ -47,7 +47,7 @@
 					<category-ratio />
 				</div>
 			</el-col>
-		</el-row>
+		</el-row> -->
 	</div>
 </template>
 
