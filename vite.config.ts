@@ -29,7 +29,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
 				brotliSize: true
 			})
 		],
-		base: "/",
+		base: "./",
 		server: {
 			port: 9000,
 			proxy,
@@ -52,7 +52,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
 			}
 		},
 		esbuild: {
-			drop: isDev(mode) ? [] : ["console", "debugger"],
+			drop: isDev(mode) ? [] : ["console", "debugger"]
 		},
 		build: {
 			minify: "esbuild",

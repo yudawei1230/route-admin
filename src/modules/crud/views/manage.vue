@@ -77,13 +77,14 @@ const Upsert = useUpsert({
 			component: { name: "el-input" },
 			required: true
 		},
-
+		
 		{ 
 			prop: "keyword",
 			label: "关键词",
 			hook: {
 				bind: "string"
 			},
+			required: true,
 			component: {
 				name: "el-select",
 				options: keyword,
@@ -122,32 +123,32 @@ const Table = useTable({
 					ElMessage.success("短链复制成功");
 				}
 			},
-			{
-				label: "修改路由",
-				type: "default",
-				onClick({ scope }) {
-					//UpsertCode.value.edit(scope.row)
-					// config.items[0].routeCode = scope.row.routeCode
-					UpsertCode.value?.open(
-						{
-							title: '修改路由',
-							// dialog: config.dialog,
-							items: cloneDeep(UpsertCodeItems),
-							on: {
-								submit(data) {
-									Upsert.value.mode = 'update'
-									Upsert.value.submit({ ...scope.row, routeCode: data.routeCode })
-									UpsertCode.value.close()
-								}
-							},
-							form: {
-								routeCode: scope.row.routeCode
-							},
-							_data: {}
-						}
-					);
-				}
-			},
+			// {
+			// 	label: "修改路由",
+			// 	type: "default",
+			// 	onClick({ scope }) {
+			// 		//UpsertCode.value.edit(scope.row)
+			// 		// config.items[0].routeCode = scope.row.routeCode
+			// 		UpsertCode.value?.open(
+			// 			{
+			// 				title: '修改路由',
+			// 				// dialog: config.dialog,
+			// 				items: cloneDeep(UpsertCodeItems),
+			// 				on: {
+			// 					submit(data) {
+			// 						Upsert.value.mode = 'update'
+			// 						Upsert.value.submit({ ...scope.row, routeCode: data.routeCode })
+			// 						UpsertCode.value.close()
+			// 					}
+			// 				},
+			// 				form: {
+			// 					routeCode: scope.row.routeCode
+			// 				},
+			// 				_data: {}
+			// 			}
+			// 		);
+			// 	}
+			// },
 		], width: 300 }
 	]
 });
