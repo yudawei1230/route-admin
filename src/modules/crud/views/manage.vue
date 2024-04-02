@@ -77,7 +77,12 @@ const Upsert = useUpsert({
 			component: { name: "el-input" },
 			required: true
 		},
-		
+		{
+			prop: "brand",
+			label: "品牌名",
+			component: { name: "el-input" },
+			required: true
+		},
 		{ 
 			prop: "keyword",
 			label: "关键词",
@@ -101,6 +106,7 @@ const Table = useTable({
 		{ prop: "customerName", label: "客户名" },
 		{ prop: "shortLinkName", label: "短链名" },
 		{ prop: "shortLinkId", label: "短链id" },
+		{ prop: "brand", label: "品牌" },
 		// { prop: "redirectUrl", label: "跳转链接"},
 		{ 
 			prop: "keyword",
@@ -119,7 +125,7 @@ const Table = useTable({
 				label: "复制短链",
 				type: "success",
 				onClick({ scope }) {
-					copy(`${location.origin.replace(/\:\d+/, '')}/${scope.row.shortLinkId}`);
+					copy(`${location.origin.includes('localhost') ? 'http://localhost:8001  ' : location.origin.replace(/\:\d+/, '')}/${scope.row.shortLinkId}`);
 					ElMessage.success("短链复制成功");
 				}
 			},
