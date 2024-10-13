@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <title>产品关键字排名</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+</head>
+
+<body style="height: 100%; margin: 0">
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="height: 100%"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        function getQueryParam(param) {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            return urlParams.get(param);
+        }
+        var id = getQueryParam('id') || '';
+        fetch('/api/getLinks').then(v => v.json()).then(v => {
+            const entity = v.data.find(v => v.id === Number(id))
+            if (!entity || !entity.rank) return
+            let rank = []
+            try {
+                const defaultData = JSON.parse(entity.rank).map(v => ({ ...v, date: new Date(v.time).toLocaleString() }))
+                // 将默认数据转换为ECharts需要的格式
+                var chartData = defaultData.map(item => {
+                    var parts = item.rank.split('-').map(Number);
+                    var page = parts[0];
+                    var position = parts[1];
+                    // 将页数从1开始计数
+                    var rank = (page - 1) * 100 + position;
+                    return {
+                        value: [new Date(item.date), rank]
+                    };
+                });
+
+
+                // 获取产品名称和关键字
+                var productName = getQueryParam('product') || '';
+                var keyword = getQueryParam('keyword') || '';
+                // 获取最新排名数据
+                var latestRankData = defaultData[defaultData.length - 1];
+                var latestRankParts = latestRankData.rank.split('-').map(Number);
+                var latestPage = latestRankParts[0];
+                var latestPosition = latestRankParts[1];
+                var latestRank = (latestPage - 1) * 100 + latestPosition;
+                var latestDate = new Date(latestRankData.date);
+                var formattedLatestDate = latestDate.toISOString().split('.')[0].replace('T', ' ');
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: `${productName}关键字${keyword}排名 - 最新排名：${formattedLatestDate}，第${latestPage}页第${latestPosition}位`
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            var date = new Date(params[0].value[0]);
+                            var rank = params[0].value[1];
+                            var page = Math.floor(rank / 100) + 1; // 页数从1开始
+                            var position = rank % 100;
+                            // 格式化日期和时间
+                            var formattedDate = date.toISOString().split('.')[0].replace('T', ' ');
+                            return `${formattedDate}: 第${page}页第${position}位`;
+                        }
+                    },
+                    legend: {
+                        data: ['排名']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'time',
+                        boundaryGap: false,
+                        splitLine: {
+                            show: false
+                        }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: function (value) {
+                                var page = Math.floor(value / 100) + 1; // 页数从1开始
+                                return `第${page}页`;
+                            }
+                        }
+                    },
+                    series: [
+                        {
+                            name: '排名',
+                            type: 'line',
+                            stack: '总量',
+                            data: chartData // 使用默认数据
+                        }
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            } catch (e) {
+                console.log(e)
+            }
+        })
+    </script>
+</body>
+
+</html>

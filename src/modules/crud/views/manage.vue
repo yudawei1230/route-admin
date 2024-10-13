@@ -14,7 +14,12 @@
 
 		<cl-row>
 			<!-- 数据表格 -->
-			<cl-table ref="Table"> </cl-table>
+			<cl-table ref="Table">
+				<!-- 权限 -->
+				<template #column-rank="{ scope }">
+					<el-link type="primary" @click="viewRank(scope.row)">  {{ formatRank(scope.row.rank) }}</el-link>
+				</template>
+				 </cl-table>
 		</cl-row>
 
 		<cl-row>
@@ -57,6 +62,7 @@ const UpsertCodeItems = [
 
 	}
 ]
+
 const keyword = computed(() => {
 	const list = dict.get("keyword").value
 	if(!Array.isArray(list) || !list.length) return []
@@ -65,6 +71,22 @@ const keyword = computed(() => {
 		return v
 	})
 })
+
+const viewRank = (row) => {
+	window.open(`${location.origin}/chart.html?id=${row.id}&product=${encodeURIComponent(row.customerName)}&keyword=${encodeURIComponent(keyword.value.find(v => v.value === row.keyword)?.label)}`)
+}
+
+const formatRank = (rankListStr) => {
+	try {
+		const list = JSON.parse(rankListStr)
+		const rank = list[list.length -1]?.rank
+		if(!rank) return ''
+		return `第${rank.replace('-', '页-第')}位`
+	} catch(e) {}
+	return ''
+}
+
+
 // cl-upsert
 const Upsert = useUpsert({
 	items: [
@@ -125,7 +147,7 @@ const Table = useTable({
 				label: "复制短链",
 				type: "success",
 				onClick({ scope }) {
-					copy(`${location.origin.includes('localhost') ? 'http://localhost:8001  ' : location.origin.replace(/\:\d+/, '')}/${scope.row.shortLinkId}`);
+					copy(`${location.origin.includes('localhost') ? 'http://localhost:8001' : location.origin.replace(/\:\d+/, '')}/${scope.row.shortLinkId}`);
 					ElMessage.success("短链复制成功");
 				}
 			},
